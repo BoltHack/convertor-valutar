@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class App extends JFrame {
-    private JLabel messageLabel;
+    private JTextField messageLabel;
     private JButton rateRoubleDollarButton;
     private JButton rateDollarRoubleButton;
 
@@ -14,6 +14,24 @@ public class App extends JFrame {
 
     private float dollar = 0.013f;
 
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(0x16171d));
+        button.setForeground(Color.white);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    private void showStartScreen() {
+        getContentPane().removeAll();
+        add(rateRoubleDollarButton, BorderLayout.SOUTH);
+        add(rateDollarRoubleButton, BorderLayout.NORTH);
+        revalidate();
+        repaint();
+    }
+
     public App() {
         setLayout(new BorderLayout());
         setSize(400, 200);
@@ -21,10 +39,12 @@ public class App extends JFrame {
         setLocationRelativeTo(null);
         setTitle("Конвертер валют");
 
-        messageLabel = new JLabel();
+        messageLabel = new JTextField();
         messageLabel.setForeground(new Color(0xffffff));
+        messageLabel.setBackground(new Color(0x16171d));
         messageLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        messageLabel.setEditable(false);
 
         currency = new JTextField();
         currency.setBackground(new Color(0x242632));
@@ -33,33 +53,10 @@ public class App extends JFrame {
         currency.setForeground(new Color(0xffffff));
         currency.setCaretColor(new Color(0xffffff));
 
-        rateRoubleDollarButton = new JButton("Рубль к доллару");
-        rateRoubleDollarButton.setContentAreaFilled(false);
-        rateRoubleDollarButton.setFocusPainted(false);
-        rateRoubleDollarButton.setBackground(new Color(0x16171d));
-        rateRoubleDollarButton.setForeground(new Color(0xffffff));
-        rateRoubleDollarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        rateDollarRoubleButton = new JButton("Доллар к рублю");
-        rateDollarRoubleButton.setContentAreaFilled(false);
-        rateDollarRoubleButton.setFocusPainted(false);
-        rateDollarRoubleButton.setBackground(new Color(0x16171d));
-        rateDollarRoubleButton.setForeground(new Color(0xffffff));
-        rateDollarRoubleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        converterButton = new JButton("Сконвертировать");
-        converterButton.setContentAreaFilled(false);
-        converterButton.setFocusPainted(false);
-        converterButton.setBackground(new Color(0x16171d));
-        converterButton.setForeground(new Color(0xffffff));
-        converterButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        backButton = new JButton("Назад");
-        backButton.setContentAreaFilled(false);
-        backButton.setFocusPainted(false);
-        backButton.setBackground(new Color(0x16171d));
-        backButton.setForeground(new Color(0xffffff));
-        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        rateRoubleDollarButton = createButton("Рубль к доллару");
+        rateDollarRoubleButton = createButton("Доллар к рублю");
+        converterButton = createButton("Сконвертировать");
+        backButton = createButton("Назад");
 
         add(rateRoubleDollarButton, BorderLayout.SOUTH);
         add(rateDollarRoubleButton, BorderLayout.NORTH);
@@ -71,18 +68,7 @@ public class App extends JFrame {
                 Convertor("dollar-rouble")
         );
 
-        backButton.addActionListener(e -> {
-            add(rateRoubleDollarButton, BorderLayout.SOUTH);
-            add(rateDollarRoubleButton, BorderLayout.NORTH);
-            remove(converterButton);
-            remove(backButton);
-
-            remove(messageLabel);
-            remove(currency);
-
-            revalidate();
-            repaint();
-        });
+        backButton.addActionListener(e -> showStartScreen());
     }
 
     private void Convertor(String rate) {
@@ -130,7 +116,6 @@ public class App extends JFrame {
                 messageLabel.setText(String.format("%.2f долларов сконвертированы в %.2f рублей", value, res));
                 currency.setText("");
                 currency.setEnabled(false);
-                messageLabel.setEnabled(true);
 
                 remove(converterButton);
                 add(backButton, BorderLayout.SOUTH);
